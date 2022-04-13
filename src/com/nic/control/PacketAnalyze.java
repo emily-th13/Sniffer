@@ -19,12 +19,6 @@ public class PacketAnalyze {
 		}else if(packet.getClass().equals(UDPPacket.class)){
 			att1 = UDPanalyze();
 		}
-		else if(packet.getClass().equals(HTTPPacket.class)){
-			att1 = HTTPanalyze();
-		}
-		else if(packet.getClass().equals(TLSPacket.class)){
-			att1 = TLSanalyze();
-		}
 		return att;
 	}
 	public static HashMap<String,String> IPanalyze(){
@@ -52,7 +46,15 @@ public class PacketAnalyze {
 		att = new HashMap<String,String>();
 		TCPPacket tcppacket = (TCPPacket) packet;
 		EthernetPacket ethernetPacket=(EthernetPacket)packet.datalink;
-		att.put("协议", new String("TCP"));
+		if(tcppacket.src_port==80||tcppacket.dst_port==80) {
+			att.put("协议", new String("HTTP"));
+		}
+		else if(tcppacket.src_port==443||tcppacket.dst_port==443){
+			att.put("协议", new String("TLS"));
+		}
+		else {
+			att.put("协议", new String("TCP"));
+		}
 		att.put("源IP", tcppacket.src_ip.toString().substring(1, tcppacket.src_ip.toString().length()));
 		att.put("源端口", String.valueOf(tcppacket.src_port));
 		att.put("目的IP", tcppacket.dst_ip.toString().substring(1, tcppacket.dst_ip.toString().length()));
@@ -64,44 +66,6 @@ public class PacketAnalyze {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return att;
-	}
-	public static HashMap<String,String> UDPanalyze(){
-		att = new HashMap<String,String>();
-		UDPPacket udpppacket = (UDPPacket) packet;
-		EthernetPacket ethernetPacket=(EthernetPacket)packet.datalink;
-		att.put("协议", new String("UDP"));
-		att.put("源IP", udpppacket.src_ip.toString().substring(1, udpppacket.src_ip.toString().length()));
-		att.put("源端口", String.valueOf(udpppacket.src_port));
-		att.put("目的IP", udpppacket.dst_ip.toString().substring(1, udpppacket.dst_ip.toString().length()));
-		att.put("目的端口", String.valueOf(udpppacket.dst_port));
-		att.put("源MAC", ethernetPacket.getSourceAddress());
-		att.put("目的MAC", ethernetPacket.getDestinationAddress());
-		try {
-			att.put("数据", new String(udpppacket.data,"gbk"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	
-		return att;
-	}
-	public static HashMap<String,String> HTTPanalyze(){
-		att = new HashMap<String,String>();
-		HTTPPacket httpppacket = (HTTPPacket) packet;
-		EthernetPacket ethernetPacket=(EthernetPacket)packet.datalink;
-		att.put("协议", new String("UDP"));
-		att.put("源IP", udpppacket.src_ip.toString().substring(1, udpppacket.src_ip.toString().length()));
-		att.put("源端口", String.valueOf(udpppacket.src_port));
-		att.put("目的IP", udpppacket.dst_ip.toString().substring(1, udpppacket.dst_ip.toString().length()));
-		att.put("目的端口", String.valueOf(udpppacket.dst_port));
-		att.put("源MAC", ethernetPacket.getSourceAddress());
-		att.put("目的MAC", ethernetPacket.getDestinationAddress());
-		try {
-			att.put("数据", new String(udpppacket.data,"gbk"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	
 		return att;
 	}
 	public static HashMap<String,String> UDPanalyze(){
