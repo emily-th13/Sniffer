@@ -31,6 +31,13 @@ public class PacketAnalyze {
 			att.put("TTL", String.valueOf(ippacket.hop_limit));
 			att.put("头长度", String.valueOf(ippacket.header.length));
 			att.put("是否有其他切片", String.valueOf(ippacket.more_frag));
+			try {
+//				String str = new String(ippacket.data, "utf-16");
+//				System.out.println(str);
+				att.put("数据", new String(ippacket.data,"gbk"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		return att;
 	}
@@ -47,10 +54,10 @@ public class PacketAnalyze {
 		TCPPacket tcppacket = (TCPPacket) packet;
 		EthernetPacket ethernetPacket=(EthernetPacket)packet.datalink;
 		if(tcppacket.src_port==80||tcppacket.dst_port==80) {
-			att.put("协议", new String("HTTP"));
+			att.put("协议", new String("HTTP(TCP)"));
 		}
 		else if(tcppacket.src_port==443||tcppacket.dst_port==443){
-			att.put("协议", new String("TLS"));
+			att.put("协议", new String("TLS(TCP)"));
 		}
 		else {
 			att.put("协议", new String("TCP"));

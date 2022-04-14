@@ -90,6 +90,14 @@ public class PacketCapture implements Runnable {
 			if(new PacketAnalyze(packet).packetClass().get("协议").equals("TCP")){
 				return true;
 			}
+		}else if(FilterMess.contains("HTTP")){
+			if(new PacketAnalyze(packet).packetClass().get("协议").equals("HTTP")){
+				return true;
+			}
+		}else if(FilterMess.contains("TLS")){
+			if(new PacketAnalyze(packet).packetClass().get("协议").equals("TLS")){
+				return true;
+			}
 		}else if(FilterMess.contains("keyword")){
 			String keyword = FilterMess.substring(8, FilterMess.length());
 			if(new PacketAnalyze(packet).packetClass().get("数据").contains(keyword)){
@@ -111,6 +119,7 @@ public class PacketCapture implements Runnable {
 			data[2]=new PacketAnalyze(packet).packetClass().get("目的IP");
 			data[3]=new PacketAnalyze(packet).packetClass().get("协议");
 			data[4]=String.valueOf(packet.len);
+			data[5]=new PacketAnalyze(packet).packetClass().get("数据");
 		}
 		return data;
 	}

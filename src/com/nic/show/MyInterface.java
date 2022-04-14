@@ -3,6 +3,7 @@ package com.nic.show;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,7 +17,7 @@ public class MyInterface extends JFrame{
 	JMenuBar menubar;   //菜单条
 	JMenu menuFile1,menuFile2; //菜单
 	JMenuItem[] item;   //菜单项
-	JMenuItem pro1,pro2,pro3;
+	JMenuItem pro1,pro2,pro3,pro4,pro5;
 	JTextField searchText;
 	JButton sipButton,dipButton,searchButton;
 	JPanel panel;  
@@ -50,6 +51,8 @@ public class MyInterface extends JFrame{
 		pro1 = new JMenuItem("ICMP");
 		pro2 = new JMenuItem("TCP");
 		pro3 = new JMenuItem("UDP");
+		pro4 = new JMenuItem("HTTP");
+		pro5 = new JMenuItem("TLS");
 		pro1.addActionListener(  
 				new ActionListener(){  
 					public void actionPerformed(ActionEvent e3) {  
@@ -80,9 +83,31 @@ public class MyInterface extends JFrame{
 						}
 					}  
 				}); 
+		pro4.addActionListener(  
+				new ActionListener(){  
+					public void actionPerformed(ActionEvent e4) {  
+						allpackets.setFilter("HTTP");
+						allpackets.clearpackets();
+						while(tableModel.getRowCount()>0){
+							tableModel.removeRow(tableModel.getRowCount()-1);
+						}
+					}  
+				}); 
+		pro5.addActionListener(  
+				new ActionListener(){  
+					public void actionPerformed(ActionEvent e5) {  
+						allpackets.setFilter("TLS");
+						allpackets.clearpackets();
+						while(tableModel.getRowCount()>0){
+							tableModel.removeRow(tableModel.getRowCount()-1);
+						}
+					}  
+				}); 
 		menuFile2.add(pro1);
 		menuFile2.add(pro2);
 		menuFile2.add(pro3);
+		menuFile2.add(pro4);
+		menuFile2.add(pro5);
 		//根据源IP进行过滤
 		sipButton = new JButton(" 源IP ");
 		sipButton.addActionListener(  
@@ -193,7 +218,12 @@ public class MyInterface extends JFrame{
 					hm1 = new PacketAnalyze(packet).IPanalyze();
 					for(Map.Entry<String,String> me1 : hm1.entrySet())
 					{
-						info.append(me1.getKey()+" : "+me1.getValue()+"\n");
+						try {
+							String str = new String(me1.getValue().getBytes(), "utf-8");
+							info.append(me1.getKey()+" : "+str+"\n");
+						}catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
 					}
 					hm2 = new PacketAnalyze(packet).packetClass();
 					info.append("------------------------------------------------------------------------------\n");
@@ -201,7 +231,12 @@ public class MyInterface extends JFrame{
 					info.append("------------------------------------------------------------------------------\n");
 					for(Map.Entry<String,String> me : hm2.entrySet())
 					{
-						info.append(me.getKey()+" : "+me.getValue()+"\n");
+						try {
+							String str = new String(me.getValue().getBytes(), "utf-8");
+							info.append(me.getKey()+" : "+str+"\n");
+						}catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
