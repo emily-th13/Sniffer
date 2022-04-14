@@ -85,8 +85,8 @@ public class MyInterface extends JFrame{
 				}); 
 		pro4.addActionListener(  
 				new ActionListener(){  
-					public void actionPerformed(ActionEvent e4) {  
-						allpackets.setFilter("HTTP");
+					public void actionPerformed(ActionEvent e3) {  
+						allpackets.setFilter("HTTP(TCP)");
 						allpackets.clearpackets();
 						while(tableModel.getRowCount()>0){
 							tableModel.removeRow(tableModel.getRowCount()-1);
@@ -95,8 +95,8 @@ public class MyInterface extends JFrame{
 				}); 
 		pro5.addActionListener(  
 				new ActionListener(){  
-					public void actionPerformed(ActionEvent e5) {  
-						allpackets.setFilter("TLS");
+					public void actionPerformed(ActionEvent e3) {  
+						allpackets.setFilter("TLS(TCP)");
 						allpackets.clearpackets();
 						while(tableModel.getRowCount()>0){
 							tableModel.removeRow(tableModel.getRowCount()-1);
